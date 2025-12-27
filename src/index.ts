@@ -1,16 +1,13 @@
 import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
 import { typeDefs } from "./schema.js";
-
-const resolvers = {
-    Query: {
-        hello: () => "Hello World"
-    }
-}
+import { Query } from "./resolvers/inex.js";
 
 const server = new ApolloServer({
   typeDefs,
-  resolvers,
+  resolvers: {
+    Query
+  },
 });
 
 const { url } = await startStandaloneServer(server, {
