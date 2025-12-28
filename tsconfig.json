@@ -1,12 +1,12 @@
 {
   "compilerOptions": {
     /* Language & environment */
-    "target": "ES2022",
+    "target": "ES2023",
     "lib": ["ES2022"],
 
     /* Module system */
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
+    "module": "esnext",
+    "moduleResolution": "node",
 
     /* Paths */
     "rootDir": "./src",
