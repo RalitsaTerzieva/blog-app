@@ -37,7 +37,7 @@ export const typeDefs = `#graphql
   }
 
   type PostPayload {
-    userError: [UserError!]!
+    userErrors: [UserError!]!
     post: Post!
   }
   `

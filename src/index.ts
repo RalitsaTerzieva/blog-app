@@ -2,13 +2,7 @@ import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
 import { typeDefs } from "./schema.js";
 import { Query, Mutation } from "./resolvers/inex.js";
-import { PrismaClient } from './generated/prisma/client.js';
-
-const prisma = new PrismaClient();
-
-export interface MyContext {
-  prisma: PrismaClient;
-}
+import { prisma, MyContext } from "./context.js";
 
 const server = new ApolloServer({
   typeDefs,
