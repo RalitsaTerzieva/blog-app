@@ -89,5 +89,32 @@ export const Mutation = {
                 }
             })
         }
+    },
+    postDelete: async (_parent: any, { postId }: {postId: string}, { prisma }: MyContext) => {
+       const post = await prisma.post.findUnique({
+        where: {
+            id: Number(postId)
+        }
+       })
+
+       if(!post) {
+            return {
+                userError: [
+                    {message: "Post does not exist!"}
+                ],
+                post: null
+            }
+        }
+
+        await prisma.post.delete({
+            where: {
+                id: Number(postId)
+            }
+        })
+
+        return {
+            userErrors: [],
+            post
+        }
     }
 }
