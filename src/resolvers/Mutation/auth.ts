@@ -5,11 +5,21 @@ import JWT from "jsonwebtoken";
 import { JWT_SIGNATURE } from "../../constants.js";
 
 interface signupArgs {
-    email: string;
+    credentials: {
+        email: string,
+        password: string;
+    }
     name: string;
     bio: string;
-    password: string;
 }
+
+interface signinArgs {
+    credentials: {
+        email: string,
+        password: string;
+    }
+}
+
 
 interface UserPayload {
     userErrors: {
@@ -19,7 +29,8 @@ interface UserPayload {
 }
 
 export const authResolvers = {
-    signup: async (_parent: any, {email, name, bio, password}: signupArgs, { prisma }: MyContext): Promise<UserPayload> => {
+    signup: async (_parent: any, {credentials, name, bio}: signupArgs, { prisma }: MyContext): Promise<UserPayload> => {
+        const { email, password } = credentials;
         const isEmail = validator.isEmail(email);
 
         if(!isEmail) {
@@ -63,15 +74,55 @@ export const authResolvers = {
             }
         })
 
+        await prisma.profile.create({
+           data: {
+                bio,
+                user: { connect: { id: user.id } },
+            },
+        })
 
         const token = JWT.sign({
-            userId: user.id,
-            email: user.email
+            userId: user.id
         }, JWT_SIGNATURE, {expiresIn: 3600000})
 
         return {
                 userErrors: [],
                 token: token
             }
-    }
+    },
+    signin: async (_parent: any, { credentials }: signinArgs, { prisma }: MyContext): Promise<UserPayload> => {
+        const { email, password } = credentials;
+        const user = await prisma.user.findUnique({
+            where: {
+                email
+            }
+        });
+
+        if(!user) {
+            return {
+                userErrors: [{
+                    message: "Invalid credentials!"
+                }],
+                token: null
+            }
+        }
+
+        const isMatch = await bcrypt.compare(password, user.password)
+       
+        if(!isMatch) {
+            return {
+                userErrors: [{
+                    message: "Invalid credentials!"
+                }],
+                token: null
+            }
+        }
+
+
+        return {
+            userErrors: [],
+            token: JWT.sign({userId: user.id}, JWT_SIGNATURE, {expiresIn: 3600000})
+        }
+
+    },
 }
