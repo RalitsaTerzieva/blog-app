@@ -1,6 +1,7 @@
 import { MyContext } from "../../context";
 import validator from 'validator';
 import { User } from "../../generated/prisma/client";
+import bcrypt from "bcryptjs";
 
 interface signupArgs {
     email: string;
@@ -50,6 +51,16 @@ export const authResolvers = {
                 user: null
             }
         }
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        await prisma.user.create({
+            data: {
+                email,
+                name,
+                password: hashedPassword
+            }
+        })
 
 
         return {
