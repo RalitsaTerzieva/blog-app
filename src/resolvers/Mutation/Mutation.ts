@@ -1,5 +1,5 @@
-import { Post } from "../generated/prisma/client";
-import { MyContext } from "../context";
+import { Post } from "../../generated/prisma/client";
+import { MyContext } from "../../context";
 
 interface PostCreateArgs {
     post: {
@@ -116,5 +116,8 @@ export const Mutation = {
             userErrors: [],
             post
         }
+    },
+    signup: () => {
+        
     }
 }

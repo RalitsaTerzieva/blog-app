@@ -1,2 +1,2 @@
 export * from "./Query.js";
-export * from "./Mutation.js";
+export * from "./Mutation/Mutation.js";
