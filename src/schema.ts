@@ -46,7 +46,7 @@ export const typeDefs = `#graphql
 
   type AuthPayload {
     userErrors: [UserError!]!
-    user: User
+    token: String
   }
 
   input PostInput {

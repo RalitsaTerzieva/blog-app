@@ -1,7 +1,8 @@
 import { MyContext } from "../../context";
 import validator from 'validator';
-import { User } from "../../generated/prisma/client";
 import bcrypt from "bcryptjs";
+import JWT from "jsonwebtoken";
+import { JWT_SIGNATURE } from "../../constants.js";
 
 interface signupArgs {
     email: string;
@@ -14,7 +15,7 @@ interface UserPayload {
     userErrors: {
             message: string
         }[],
-        user: User | null 
+        token: String | null 
 }
 
 export const authResolvers = {
@@ -26,7 +27,7 @@ export const authResolvers = {
                 userErrors: [{
                     message: "Invalid email!"
                 }],
-                user: null
+                token: null
             }
         }
 
@@ -39,7 +40,7 @@ export const authResolvers = {
                 userErrors: [{
                     message: "Your password should be at least 5 characters long!"
                 }],
-                user: null
+                token: null
             }
         }
 
@@ -48,13 +49,13 @@ export const authResolvers = {
                 userErrors: [{
                     message: "Invalid name or bio!"
                 }],
-                user: null
+                token: null
             }
         }
 
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        await prisma.user.create({
+        const user = await prisma.user.create({
             data: {
                 email,
                 name,
@@ -63,9 +64,14 @@ export const authResolvers = {
         })
 
 
+        const token = JWT.sign({
+            userId: user.id,
+            email: user.email
+        }, JWT_SIGNATURE, {expiresIn: 3600000})
+
         return {
                 userErrors: [],
-                user: null
+                token: token
             }
     }
 }

@@ -59,3 +59,4 @@ schema.json
 # yarn.lock
 # pnpm-lock.yaml
 /src/generated/prisma
+constants.ts
