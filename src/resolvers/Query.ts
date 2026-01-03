@@ -20,5 +20,12 @@ export const Query = {
                 id: userInfo.userId
             }
         })
-    }
+    },
+    profile: (_parent: any, { userId }: { userId: string }, { prisma }: MyContext) => {
+        return prisma.profile.findUnique({
+            where: {
+                userId: Number(userId) 
+            }
+        })
+    },
 }
