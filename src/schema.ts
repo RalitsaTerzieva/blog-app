@@ -11,6 +11,8 @@ export const typeDefs = `#graphql
     postDelete(postId: ID!): PostPayload
     signup(credentials: CredentialsInput,name: String!, bio: String!): AuthPayload
     signin(credentials: CredentialsInput): AuthPayload
+    postPublished(postId: ID!): PostPayload
+    postUnpublished(postId: ID!): PostPayload
   }
 
   type Post {
