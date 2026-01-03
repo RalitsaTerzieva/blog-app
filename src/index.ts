@@ -1,7 +1,7 @@
 import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
 import { typeDefs } from "./schema.js";
-import { Query, Mutation, Profile } from "./resolvers/inex.js";
+import { Query, Mutation, Profile, Post } from "./resolvers/inex.js";
 import { prisma, MyContext } from "./context.js";
 import { getUsersFromToken } from "./utils/getUsersFromToken.js";
 
@@ -10,7 +10,8 @@ const server = new ApolloServer({
   resolvers: {
     Query, 
     Mutation,
-    Profile
+    Profile,
+    Post
   }
 });
 
