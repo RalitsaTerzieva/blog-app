@@ -11,5 +11,14 @@ export const Query = {
         })
 
         return posts
+    },
+    me: (_parent: any, _args: any, { userInfo, prisma }: MyContext) => {
+        if(!userInfo) return null;
+
+        return prisma.user.findUnique({
+            where: {
+                id: userInfo.userId
+            }
+        })
     }
 }
