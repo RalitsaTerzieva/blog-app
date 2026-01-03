@@ -5,4 +5,5 @@ export const prisma = new PrismaClient();
 
 export interface MyContext {
   prisma: PrismaClient;
+  userInfo: {userId: number} | null
 }

@@ -1,6 +1,6 @@
 import { MyContext } from "../../context";
 import { Post } from "../../generated/prisma/client";
-
+import { canUserMutatePost } from "../../utils/canUserMutatePost.js";
 
 
 interface PostCreateArgs {
@@ -18,7 +18,20 @@ interface PostPayloadType {
 }
 
 export const postResolvers = {
-        postCreate: async (_parent: any, { post }: PostCreateArgs, context: MyContext): Promise<PostPayloadType> => {
+        postCreate: async (_parent: any, { post }: PostCreateArgs, {prisma, userInfo}: MyContext): Promise<PostPayloadType> => {
+            
+            if(!userInfo) {
+                return {
+                  userErrors: [
+                    {
+                      message:
+                        "You must login first!",
+                    },
+                  ],
+                  post: null,
+                };
+            }
+            
             const { title, content } = post;
             if(!title || !content) {
                 return {
@@ -32,11 +45,11 @@ export const postResolvers = {
                 };
             }
             
-            const newPost = await context.prisma.post.create({
+            const newPost = await prisma.post.create({
               data: {
                 title,
                 content,
-                authorId: 1,
+                authorId: userInfo.userId
               },
             });
     
@@ -45,7 +58,32 @@ export const postResolvers = {
                 post: newPost
             }
         },
-        postUpdate: async (_parent: any, { post, postId }: {postId: string, post: PostCreateArgs["post"]}, { prisma }: MyContext) => {
+        postUpdate: async (_parent: any, { post, postId }: {postId: string, post: PostCreateArgs["post"]}, { prisma, userInfo }: MyContext) => {
+             if(!userInfo) {
+                return {
+                  userErrors: [
+                    {
+                      message:
+                        "You must login first!",
+                    },
+                  ],
+                  post: null,
+                };
+            }
+
+            try {
+                await canUserMutatePost({
+                    userId: userInfo.userId,
+                    postId: Number(postId),
+                    prisma,
+                });
+            } catch (err: any) {
+                return {
+                    userErrors: [{ message: err.message }],
+                    post: null,
+                };
+            }
+
             const { title, content } = post;
     
             if(!title && !content) {
@@ -92,7 +130,32 @@ export const postResolvers = {
                 })
             }
         },
-        postDelete: async (_parent: any, { postId }: {postId: string}, { prisma }: MyContext) => {
+        postDelete: async (_parent: any, { postId }: {postId: string}, { prisma, userInfo }: MyContext) => {
+            if(!userInfo) {
+                return {
+                  userErrors: [
+                    {
+                      message:
+                        "You must login first!",
+                    },
+                  ],
+                  post: null,
+                };
+            }
+
+            try {
+                await canUserMutatePost({
+                    userId: userInfo.userId,
+                    postId: Number(postId),
+                    prisma,
+                });
+            } catch (err: any) {
+                return {
+                    userErrors: [{ message: err.message }],
+                    post: null,
+                };
+            }
+
            const post = await prisma.post.findUnique({
             where: {
                 id: Number(postId)
