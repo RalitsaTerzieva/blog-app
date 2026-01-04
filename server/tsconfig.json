@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    /* Language & environment */
+    "target": "ES2023",
+    "lib": ["ES2022"],
+
+    /* Module system */
+    "module": "esnext",
+    "moduleResolution": "node",
+
+    /* Paths */
+    "rootDir": ".",
+    "outDir": "./dist",
+
+    /* Interop & imports */
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+
+    /* Type checking */
+    "strict": true,
+    "skipLibCheck": true,
+
+    /* Runtime */
+    "noEmit": true
+  },
+  "include": ["**/*.ts"],
+  "exclude": ["node_modules", "dist", "prisma/**/*"]
+}
