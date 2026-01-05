@@ -37,6 +37,7 @@ export const typeDefs = `#graphql
   type Profile {
     id: ID!
     bio: String!
+    isMyProfile: Boolean!
     user: User!
   }
 

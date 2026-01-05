@@ -1,3 +1,4 @@
+import { userInfo } from "node:os";
 import { MyContext } from "../context";
 
 export const Query = {
@@ -21,11 +22,20 @@ export const Query = {
             }
         })
     },
-    profile: (_parent: any, { userId }: { userId: string }, { prisma }: MyContext) => {
-        return prisma.profile.findUnique({
+    profile: async (_parent: any, { userId }: { userId: string }, { prisma, userInfo }: MyContext) => {
+
+        const isMyProfile = Number(userId) === userInfo?.userId;
+        const profile = await prisma.profile.findUnique({
             where: {
                 userId: Number(userId) 
             }
         })
+
+        if(!profile) return null;
+
+        return {
+            ...profile,
+            isMyProfile
+        }
     },
 }
