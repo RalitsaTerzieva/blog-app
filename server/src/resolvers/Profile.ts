@@ -12,6 +12,9 @@ export const Profile = {
       where: {
         id: parent.userId,
       },
+      include: {
+        posts: true,
+      },
     });
   },
 };

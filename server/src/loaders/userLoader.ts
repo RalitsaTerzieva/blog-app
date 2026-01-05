@@ -6,7 +6,7 @@ import { prisma } from "../context.js";
 type BatchUser = (ids: number[]) => Promise<User[]>;
 
 const batchUsers: BatchUser = async (ids) => {
-  console.log(ids);
+
   const users = await prisma.user.findMany({
     where: {
       id: {
