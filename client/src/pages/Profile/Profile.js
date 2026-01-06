@@ -38,6 +38,8 @@ export default function Profile() {
 
   const { profile } = data;
 
+  console.log(profile.isMyProfile)
+
   return (
     <div>
       <div

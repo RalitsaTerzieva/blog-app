@@ -23,7 +23,8 @@ export const Query = {
         })
     },
     profile: async (_parent: any, { userId }: { userId: string }, { prisma, userInfo }: MyContext) => {
-
+        console.log("userInfo in profile resolver:", userInfo);
+        console.log("profile userId:", userId);
         const isMyProfile = Number(userId) === userInfo?.userId;
         const profile = await prisma.profile.findUnique({
             where: {
