@@ -5,7 +5,7 @@ import { gql, useMutation } from "@apollo/client";
 
 const PUBLISH_POST = gql`
   mutation PublishPost($postId: ID!) {
-    postPublish(postId: $postId) {
+    postPublished(postId: $postId) {
       post {
         title
       }
@@ -15,7 +15,7 @@ const PUBLISH_POST = gql`
 
 const UNPUBLISH_POST = gql`
   mutation unpublishPost($postId: ID!) {
-    postUnpublish(postId: $postId) {
+    postUnpublished(postId: $postId) {
       post {
         title
       }
@@ -32,7 +32,7 @@ export default function Post({
   id,
   isMyProfile,
 }) {
-  
+
   const [publishPost, { data, loading }] = useMutation(PUBLISH_POST);
   const [unpublishPost, { data: unpublishData, loading: unpublishLoading }] =
     useMutation(UNPUBLISH_POST);
